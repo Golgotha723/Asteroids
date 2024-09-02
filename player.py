@@ -38,7 +38,7 @@ class Player(CircleShape):
     def update(self, dt):
         keys = pygame.key.get_pressed()
         if self.cooldown > 0:
-            self.cooldown -= 0.1
+            self.cooldown -= dt
 
         if keys[pygame.K_a]:
             self.rotate(-dt)

@@ -7,6 +7,7 @@ from shot import Shot
 
 def main():
     pygame.init()
+    pygame.display.set_caption('Asteroids')
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     updatable = pygame.sprite.Group()
@@ -22,6 +23,10 @@ def main():
 
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     dt = 0 
+    score = 0
+    large_count = 0
+    medium_count = 0
+    small_count = 0
 
     while True:
         for event in pygame.event.get():
@@ -33,10 +38,23 @@ def main():
 
         for asteroid in asteroids:
             if player.collision(asteroid) == True:
+                print(f"Your score: {score}")
+                print(f"Large asteroids Destroyed: {large_count}")
+                print(f"Medium asteroids Destroyed: {medium_count}")
+                print(f"Small asteroids Destroyed: {small_count}")
                 print("Game Over!")
                 return
             for shot in shots:
                 if shot.collision(asteroid) == True:
+                    if asteroid.radius == ASTEROID_MAX_RADIUS:
+                        large_count += 1
+                        score += 150
+                    if asteroid.radius < ASTEROID_MAX_RADIUS and asteroid.radius > ASTEROID_MIN_RADIUS:
+                        medium_count += 1
+                        score += 100
+                    if asteroid.radius == ASTEROID_MIN_RADIUS:
+                        small_count += 1
+                        score += 50
                     shot.kill()
                     asteroid.split()
         

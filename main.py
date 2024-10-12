@@ -47,6 +47,7 @@ def main():
                 raise_lives += 10000
             
         if invincible_time > 0:
+            player.b_color()
             invincible_time -= 1
 
         if time_score == 60:
@@ -62,6 +63,7 @@ def main():
 
         for asteroid in asteroids:
             if invincible_time == 0:
+                player.r_color()
                 if player.collision(asteroid) == True:
                     if lives > 0:
                         lives -= 1

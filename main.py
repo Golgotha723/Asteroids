@@ -15,7 +15,7 @@ def main():
     asteroids = pygame.sprite.Group()
     shots = pygame.sprite.Group()
 
-    text_font = pygame.font.SysFont("Arial", 30)
+    text_font = pygame.font.SysFont(None, 30)
 
     def draw_text(text, font, text_col, x, y):
         img = font.render(text, True, text_col)
@@ -39,9 +39,29 @@ def main():
     invincible_time = 0
 
     while True:
-        time_score += 1
+        screen.fill("black")
+        if lives > 0:
+            time_score += 1
+            draw_text(f"Lives: {lives}", text_font, "white", 0, 0)
+            draw_text(f"Score: {score}", text_font, "white", 0, 25)
+            if score >= raise_lives:
+                lives += 1
+                asteroid_field.speed_increase()
+                raise_lives += 10000 
+
+        if lives <= 0:
+            player.kill()
+            draw_text("Game Over!", text_font, "white", 570, 300)
+            draw_text(f"Your score: {score}", text_font, "white", 555, 325)
+            draw_text(f"Large asteroids Destroyed: {large_count}", text_font, "white", 490, 350)
+            draw_text(f"Medium asteroids Destroyed: {medium_count}", text_font, "white", 480, 375)
+            draw_text(f"Small asteroids Destroyed: {small_count}", text_font, "white", 490, 400)
+            draw_text("Press Enter to Exit", text_font, "white", 545, 425)
+            if pygame.key.get_pressed()[pygame.K_RETURN] or pygame.key.get_pressed()[pygame.K_KP_ENTER]:
+                return
 
         if score >= raise_lives:
+            if lives > 0:
                 lives += 1
                 asteroid_field.speed_increase()
                 raise_lives += 10000
@@ -65,20 +85,11 @@ def main():
             if invincible_time == 0:
                 player.r_color()
                 if player.collision(asteroid) == True:
-                    if lives > 0:
-                        lives -= 1
-                        invincible_time += 180
-                
-                    if lives <= 0:
-                        print(f"Your score: {score}")
-                        print(f"Large asteroids Destroyed: {large_count}")
-                        print(f"Medium asteroids Destroyed: {medium_count}")
-                        print(f"Small asteroids Destroyed: {small_count}")
-                        print("Game Over!")
-                        return
+                    lives -= 1
+                    invincible_time += 120
+                        
             for shot in shots:
                 if shot.collision(asteroid) == True:
-                    asteroid.velocity_increase()
                     if asteroid.radius == ASTEROID_MAX_RADIUS:
                         large_count += 1
                         score += 150
@@ -91,20 +102,11 @@ def main():
                     shot.kill()
                     asteroid.split()
         
-
-
-        screen.fill("black")
-        draw_text(f"Lives: {lives}", text_font, "white", 0, 0)
-        draw_text(f"Score: {score}", text_font, "white", 0, 25)
-        
         for obj in drawable:
             obj.draw(screen)
 
-
         pygame.display.flip()
         dt = clock.tick(60) / 1000
-        
-
 
 if __name__ == "__main__":
     main()

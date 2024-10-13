@@ -85,6 +85,7 @@ def main():
             if invincible_time == 0:
                 player.r_color()
                 if player.collision(asteroid) == True:
+                    asteroid.split()
                     lives -= 1
                     invincible_time += 120
                         
